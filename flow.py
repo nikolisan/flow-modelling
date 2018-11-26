@@ -33,7 +33,7 @@ Nx = 50  # Number of cells in x direction
 Ny = 50  # Number of cells in y direction
 
 # Variables for run
-days = 0.1
+days = 0.5
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # #
