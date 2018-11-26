@@ -1,0 +1,122 @@
+<html>
+<head>
+<title>water_level.py</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.ln { color: #475f63; font-weight: normal; font-style: normal; }
+.s0 { color: rgb(199,146,234); font-style: italic; }
+.s1 { color: rgb(195,206,227); }
+.s2 { color: rgb(137,221,255); }
+.s3 { color: rgb(247,140,108); }
+.s4 { color: rgb(195,232,141); }
+.s5 { color: rgb(84,110,122); font-style: italic; }
+</style>
+</head>
+<BODY BGCOLOR="#263238">
+<TABLE CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<TR><TD><CENTER>
+<FONT FACE="Arial, Helvetica" COLOR="#000000">
+water_level.py</FONT>
+</center></TD></TR></TABLE>
+<pre>
+<span class="s0">import </span><span class="s1">numpy 
+</span><span class="s0">import </span><span class="s1">sys 
+ 
+ 
+</span><span class="s0">def </span><span class="s1">sin_wave</span><span class="s2">(</span><span class="s1">t</span><span class="s2">, </span><span class="s1">prop</span><span class="s2">=</span><span class="s3">0.0</span><span class="s2">):</span><span class="s1"> 
+    </span><span class="s0">global </span><span class="s1">A 
+    </span><span class="s0">return </span><span class="s1">A </span><span class="s2">* </span><span class="s1">numpy</span><span class="s2">.</span><span class="s1">sin</span><span class="s2">(</span><span class="s3">2 </span><span class="s2">* </span><span class="s1">numpy</span><span class="s2">.</span><span class="s1">pi </span><span class="s2">* </span><span class="s1">t </span><span class="s2">/ </span><span class="s1">T </span><span class="s2">- </span><span class="s1">prop</span><span class="s2">)</span><span class="s1"> 
+ 
+ 
+</span><span class="s0">def </span><span class="s1">variables</span><span class="s2">(</span><span class="s1">Nx</span><span class="s2">, </span><span class="s1">Ny</span><span class="s2">, </span><span class="s1">Lx</span><span class="s2">, </span><span class="s1">Ly</span><span class="s2">, </span><span class="s1">c</span><span class="s2">, </span><span class="s1">Tin</span><span class="s2">, </span><span class="s1">A0</span><span class="s2">):</span><span class="s1"> 
+    </span><span class="s0">global </span><span class="s1">A</span><span class="s2">, </span><span class="s1">T 
+    A </span><span class="s2">= </span><span class="s1">A0 
+    T </span><span class="s2">= </span><span class="s1">Tin 
+    x </span><span class="s2">= </span><span class="s1">numpy</span><span class="s2">.</span><span class="s1">linspace</span><span class="s2">(</span><span class="s3">0</span><span class="s2">, </span><span class="s1">Lx</span><span class="s2">, </span><span class="s1">Nx </span><span class="s2">+ </span><span class="s3">3</span><span class="s2">)</span><span class="s1"> 
+    y </span><span class="s2">= </span><span class="s1">numpy</span><span class="s2">.</span><span class="s1">linspace</span><span class="s2">(</span><span class="s3">0</span><span class="s2">, </span><span class="s1">Ly</span><span class="s2">, </span><span class="s1">Ny </span><span class="s2">+ </span><span class="s3">2</span><span class="s2">)</span><span class="s1"> 
+    dx </span><span class="s2">= </span><span class="s1">Lx </span><span class="s2">/ </span><span class="s1">Nx 
+    dy </span><span class="s2">= </span><span class="s1">Ly </span><span class="s2">/ </span><span class="s1">Ny 
+    dt </span><span class="s2">= </span><span class="s1">round</span><span class="s2">(</span><span class="s1">dx </span><span class="s2">* </span><span class="s1">dy </span><span class="s2">/ </span><span class="s1">c </span><span class="s2">/ (</span><span class="s1">dx </span><span class="s2">+ </span><span class="s1">dy</span><span class="s2">))</span><span class="s1"> 
+    print</span><span class="s2">(</span><span class="s4">'Calculated Dx: {}'</span><span class="s2">.</span><span class="s1">format</span><span class="s2">(</span><span class="s1">dx</span><span class="s2">))</span><span class="s1"> 
+    print</span><span class="s2">(</span><span class="s4">'Calculated Dy: {}'</span><span class="s2">.</span><span class="s1">format</span><span class="s2">(</span><span class="s1">dy</span><span class="s2">))</span><span class="s1"> 
+    print</span><span class="s2">(</span><span class="s4">'Calculated Dt: {}'</span><span class="s2">.</span><span class="s1">format</span><span class="s2">(</span><span class="s1">dt</span><span class="s2">))</span><span class="s1"> 
+    </span><span class="s0">if </span><span class="s2">(</span><span class="s1">T </span><span class="s2">/ </span><span class="s1">dt</span><span class="s2">) &lt; </span><span class="s3">10</span><span class="s2">:  </span><span class="s5"># CFL Condition</span><span class="s1"> 
+        print</span><span class="s2">(</span><span class="s4">'The calculated Dt is not at least an order</span><span class="s2">\n</span><span class="s4">'</span><span class="s1"> 
+              </span><span class="s4">'of magnitude less than the tidal wave period.</span><span class="s2">\n</span><span class="s4">'</span><span class="s1"> 
+              </span><span class="s4">'Please change Nx and/or Ny'</span><span class="s2">)</span><span class="s1"> 
+        sys</span><span class="s2">.</span><span class="s1">exit</span><span class="s2">()</span><span class="s1"> 
+    </span><span class="s0">return </span><span class="s1">x</span><span class="s2">, </span><span class="s1">y</span><span class="s2">, </span><span class="s1">dx</span><span class="s2">, </span><span class="s1">dy</span><span class="s2">, </span><span class="s1">dt 
+ 
+ 
+</span><span class="s0">def </span><span class="s1">calculate_water_level</span><span class="s2">(</span><span class="s1">Lx</span><span class="s2">, </span><span class="s1">Nx</span><span class="s2">, </span><span class="s1">Ny</span><span class="s2">, </span><span class="s1">dx</span><span class="s2">, </span><span class="s1">dy</span><span class="s2">, </span><span class="s1">dt</span><span class="s2">, </span><span class="s1">c</span><span class="s2">, </span><span class="s1">days</span><span class="s2">, </span><span class="s1">P</span><span class="s2">=</span><span class="s0">None</span><span class="s2">):</span><span class="s1"> 
+    </span><span class="s5"># P : tuple of a point's coord to get the time series</span><span class="s1"> 
+    print</span><span class="s2">(</span><span class="s4">'Calculating water level profile for {} days...'</span><span class="s2">.</span><span class="s1">format</span><span class="s2">(</span><span class="s1">days</span><span class="s2">))</span><span class="s1"> 
+    </span><span class="s5"># Useful variables</span><span class="s1"> 
+    Cxs </span><span class="s2">= (</span><span class="s1">c </span><span class="s2">* </span><span class="s1">dt </span><span class="s2">/ </span><span class="s1">dx</span><span class="s2">) ** </span><span class="s3">2  </span><span class="s5"># Courant number for X - squared</span><span class="s1"> 
+    Cys </span><span class="s2">= (</span><span class="s1">c </span><span class="s2">* </span><span class="s1">dt </span><span class="s2">/ </span><span class="s1">dy</span><span class="s2">) ** </span><span class="s3">2  </span><span class="s5"># Courant number for Y - squared</span><span class="s1"> 
+ 
+    </span><span class="s5"># Instantiating arrays</span><span class="s1"> 
+    </span><span class="s5"># numpy.zeros(rows, columns)</span><span class="s1"> 
+    u </span><span class="s2">= </span><span class="s1">numpy</span><span class="s2">.</span><span class="s1">zeros</span><span class="s2">((</span><span class="s1">Ny </span><span class="s2">+ </span><span class="s3">2</span><span class="s2">, </span><span class="s1">Nx </span><span class="s2">+ </span><span class="s3">3</span><span class="s2">))    </span><span class="s5"># u(n+1)(i,j)   -&gt; solution array</span><span class="s1"> 
+    u_1 </span><span class="s2">= </span><span class="s1">numpy</span><span class="s2">.</span><span class="s1">zeros</span><span class="s2">((</span><span class="s1">Ny </span><span class="s2">+ </span><span class="s3">2</span><span class="s2">, </span><span class="s1">Nx </span><span class="s2">+ </span><span class="s3">3</span><span class="s2">))  </span><span class="s5"># u(n)(i,j)     -&gt; solution at t-1</span><span class="s1"> 
+    u_2 </span><span class="s2">= </span><span class="s1">numpy</span><span class="s2">.</span><span class="s1">zeros</span><span class="s2">((</span><span class="s1">Ny </span><span class="s2">+ </span><span class="s3">2</span><span class="s2">, </span><span class="s1">Nx </span><span class="s2">+ </span><span class="s3">3</span><span class="s2">))  </span><span class="s5"># u(n-1)(i,j)   -&gt; solution at t-2</span><span class="s1"> 
+ 
+    </span><span class="s5"># For time series plot</span><span class="s1"> 
+    u_ </span><span class="s2">= []</span><span class="s1"> 
+    t_ </span><span class="s2">= []</span><span class="s1"> 
+ 
+    t </span><span class="s2">= </span><span class="s3">0</span><span class="s1"> 
+    n </span><span class="s2">= </span><span class="s3">0</span><span class="s1"> 
+    </span><span class="s5"># Step 1</span><span class="s1"> 
+    t </span><span class="s2">= </span><span class="s1">t </span><span class="s2">+ </span><span class="s1">dt 
+    n </span><span class="s2">= </span><span class="s1">n </span><span class="s2">+ </span><span class="s3">1</span><span class="s1"> 
+    </span><span class="s0">for </span><span class="s1">i </span><span class="s0">in </span><span class="s1">range</span><span class="s2">(</span><span class="s3">1</span><span class="s2">, </span><span class="s1">Ny </span><span class="s2">+ </span><span class="s3">1</span><span class="s2">):</span><span class="s1"> 
+        </span><span class="s0">for </span><span class="s1">j </span><span class="s0">in </span><span class="s1">range</span><span class="s2">(</span><span class="s3">1</span><span class="s2">, </span><span class="s1">Nx </span><span class="s2">+ </span><span class="s3">2</span><span class="s2">):</span><span class="s1"> 
+            u_xx </span><span class="s2">= </span><span class="s1">u_1</span><span class="s2">[</span><span class="s1">i </span><span class="s2">+ </span><span class="s3">1</span><span class="s2">, </span><span class="s1">j</span><span class="s2">] - </span><span class="s3">2 </span><span class="s2">* </span><span class="s1">u_1</span><span class="s2">[</span><span class="s1">i</span><span class="s2">, </span><span class="s1">j</span><span class="s2">] + </span><span class="s1">u_1</span><span class="s2">[</span><span class="s1">i </span><span class="s2">- </span><span class="s3">1</span><span class="s2">, </span><span class="s1">j</span><span class="s2">]</span><span class="s1"> 
+            u_yy </span><span class="s2">= </span><span class="s1">u_1</span><span class="s2">[</span><span class="s1">i</span><span class="s2">, </span><span class="s1">j </span><span class="s2">+ </span><span class="s3">1</span><span class="s2">] - </span><span class="s3">2 </span><span class="s2">* </span><span class="s1">u_1</span><span class="s2">[</span><span class="s1">i</span><span class="s2">, </span><span class="s1">j</span><span class="s2">] + </span><span class="s1">u_1</span><span class="s2">[</span><span class="s1">i</span><span class="s2">, </span><span class="s1">j </span><span class="s2">- </span><span class="s3">1</span><span class="s2">]</span><span class="s1"> 
+            u</span><span class="s2">[</span><span class="s1">i</span><span class="s2">, </span><span class="s1">j</span><span class="s2">] = </span><span class="s1">u_1</span><span class="s2">[</span><span class="s1">i</span><span class="s2">, </span><span class="s1">j</span><span class="s2">] + </span><span class="s3">0.5 </span><span class="s2">* </span><span class="s1">Cxs </span><span class="s2">* </span><span class="s1">u_xx </span><span class="s2">+ </span><span class="s3">0.5 </span><span class="s2">* </span><span class="s1">Cys </span><span class="s2">* </span><span class="s1">u_yy 
+ 
+    </span><span class="s5"># Loop Start</span><span class="s1"> 
+    </span><span class="s0">while True</span><span class="s2">:</span><span class="s1"> 
+            t </span><span class="s2">= </span><span class="s1">t </span><span class="s2">+ </span><span class="s1">dt 
+            n </span><span class="s2">= </span><span class="s1">n </span><span class="s2">+ </span><span class="s3">1</span><span class="s1"> 
+            </span><span class="s0">for </span><span class="s1">i </span><span class="s0">in </span><span class="s1">range</span><span class="s2">(</span><span class="s3">1</span><span class="s2">, </span><span class="s1">Ny </span><span class="s2">+ </span><span class="s3">1</span><span class="s2">):</span><span class="s1"> 
+                </span><span class="s0">for </span><span class="s1">j </span><span class="s0">in </span><span class="s1">range</span><span class="s2">(</span><span class="s3">1</span><span class="s2">, </span><span class="s1">Nx </span><span class="s2">+ </span><span class="s3">2</span><span class="s2">):</span><span class="s1"> 
+                    u_xx </span><span class="s2">= </span><span class="s1">u_1</span><span class="s2">[</span><span class="s1">i </span><span class="s2">+ </span><span class="s3">1</span><span class="s2">, </span><span class="s1">j</span><span class="s2">] - </span><span class="s3">2 </span><span class="s2">* </span><span class="s1">u_1</span><span class="s2">[</span><span class="s1">i</span><span class="s2">, </span><span class="s1">j</span><span class="s2">] + </span><span class="s1">u_1</span><span class="s2">[</span><span class="s1">i </span><span class="s2">- </span><span class="s3">1</span><span class="s2">, </span><span class="s1">j</span><span class="s2">]</span><span class="s1"> 
+                    u_yy </span><span class="s2">= </span><span class="s1">u_1</span><span class="s2">[</span><span class="s1">i</span><span class="s2">, </span><span class="s1">j </span><span class="s2">+ </span><span class="s3">1</span><span class="s2">] - </span><span class="s3">2 </span><span class="s2">* </span><span class="s1">u_1</span><span class="s2">[</span><span class="s1">i</span><span class="s2">, </span><span class="s1">j</span><span class="s2">] + </span><span class="s1">u_1</span><span class="s2">[</span><span class="s1">i</span><span class="s2">, </span><span class="s1">j </span><span class="s2">- </span><span class="s3">1</span><span class="s2">]</span><span class="s1"> 
+                    u</span><span class="s2">[</span><span class="s1">i</span><span class="s2">, </span><span class="s1">j</span><span class="s2">] = </span><span class="s3">2 </span><span class="s2">* </span><span class="s1">u_1</span><span class="s2">[</span><span class="s1">i</span><span class="s2">, </span><span class="s1">j</span><span class="s2">] - </span><span class="s1">u_2</span><span class="s2">[</span><span class="s1">i</span><span class="s2">, </span><span class="s1">j</span><span class="s2">] + </span><span class="s1">Cxs </span><span class="s2">* </span><span class="s1">u_xx </span><span class="s2">+ </span><span class="s1">Cys </span><span class="s2">* </span><span class="s1">u_yy 
+ 
+            </span><span class="s5"># Open sea boundary (p. 73)</span><span class="s1"> 
+            </span><span class="s0">for </span><span class="s1">j </span><span class="s0">in </span><span class="s1">range</span><span class="s2">(</span><span class="s1">Nx </span><span class="s2">+ </span><span class="s3">2</span><span class="s2">):</span><span class="s1"> 
+                </span><span class="s0">if </span><span class="s1">t </span><span class="s2">&gt; </span><span class="s3">2</span><span class="s2">*(</span><span class="s1">Lx </span><span class="s2">/ </span><span class="s1">c</span><span class="s2">):  </span><span class="s5"># if the reflected wave have travelled back</span><span class="s1"> 
+                    </span><span class="s5"># to the open sea boundary</span><span class="s1"> 
+                    u1 </span><span class="s2">= </span><span class="s1">u_1</span><span class="s2">[</span><span class="s3">0</span><span class="s2">, </span><span class="s1">j</span><span class="s2">] - </span><span class="s1">sin_wave</span><span class="s2">(</span><span class="s1">t </span><span class="s2">- </span><span class="s1">dt</span><span class="s2">)  </span><span class="s5"># (2.38)</span><span class="s1"> 
+                    u2 </span><span class="s2">= </span><span class="s1">u_1</span><span class="s2">[</span><span class="s3">1</span><span class="s2">, </span><span class="s1">j</span><span class="s2">] - </span><span class="s1">sin_wave</span><span class="s2">(</span><span class="s1">t </span><span class="s2">- </span><span class="s1">dt</span><span class="s2">, </span><span class="s1">dx </span><span class="s2">/ </span><span class="s1">Lx</span><span class="s2">)  </span><span class="s5"># (2.39)</span><span class="s1"> 
+                    u1 </span><span class="s2">= </span><span class="s1">u1 </span><span class="s2">+ </span><span class="s1">dt </span><span class="s2">/ </span><span class="s1">dx </span><span class="s2">* </span><span class="s1">c </span><span class="s2">* (</span><span class="s1">u2 </span><span class="s2">- </span><span class="s1">u1</span><span class="s2">)  </span><span class="s5"># (2.42)</span><span class="s1"> 
+                </span><span class="s0">else</span><span class="s2">:</span><span class="s1"> 
+                    u1 </span><span class="s2">= </span><span class="s3">0</span><span class="s1"> 
+                u</span><span class="s2">[</span><span class="s3">0</span><span class="s2">, </span><span class="s1">j</span><span class="s2">] = </span><span class="s1">u1 </span><span class="s2">+ </span><span class="s1">sin_wave</span><span class="s2">(</span><span class="s1">t</span><span class="s2">)</span><span class="s1"> 
+ 
+            </span><span class="s5"># Closed boundary with ghost cells</span><span class="s1"> 
+            </span><span class="s5"># Fully reflective boundaries (Neumann Conditions)</span><span class="s1"> 
+            </span><span class="s5"># * top (i = Ny)</span><span class="s1"> 
+            u</span><span class="s2">[-</span><span class="s3">1</span><span class="s2">, :] = </span><span class="s1">u</span><span class="s2">[-</span><span class="s3">2</span><span class="s2">, :]</span><span class="s1"> 
+            </span><span class="s5"># * left (j = Nx)</span><span class="s1"> 
+            u</span><span class="s2">[:, -</span><span class="s3">1</span><span class="s2">] = </span><span class="s1">u</span><span class="s2">[:, -</span><span class="s3">2</span><span class="s2">]</span><span class="s1"> 
+            </span><span class="s5"># * right (j = 0)</span><span class="s1"> 
+            u</span><span class="s2">[:, </span><span class="s3">0</span><span class="s2">] = </span><span class="s1">u</span><span class="s2">[:, </span><span class="s3">1</span><span class="s2">]</span><span class="s1"> 
+ 
+            </span><span class="s0">if </span><span class="s1">P </span><span class="s0">is not None</span><span class="s2">:</span><span class="s1"> 
+                xp </span><span class="s2">= </span><span class="s1">P</span><span class="s2">[</span><span class="s3">0</span><span class="s2">]</span><span class="s1"> 
+                yp </span><span class="s2">= </span><span class="s1">P</span><span class="s2">[</span><span class="s3">1</span><span class="s2">]</span><span class="s1"> 
+                u_</span><span class="s2">.</span><span class="s1">append</span><span class="s2">(</span><span class="s1">u</span><span class="s2">[</span><span class="s1">xp</span><span class="s2">, </span><span class="s1">yp</span><span class="s2">])</span><span class="s1"> 
+                t_</span><span class="s2">.</span><span class="s1">append</span><span class="s2">(</span><span class="s1">t</span><span class="s2">)</span><span class="s1"> 
+ 
+            u_2 </span><span class="s2">= </span><span class="s1">numpy</span><span class="s2">.</span><span class="s1">copy</span><span class="s2">(</span><span class="s1">u_1</span><span class="s2">)</span><span class="s1"> 
+            u_1 </span><span class="s2">= </span><span class="s1">numpy</span><span class="s2">.</span><span class="s1">copy</span><span class="s2">(</span><span class="s1">u</span><span class="s2">)</span><span class="s1"> 
+ 
+            </span><span class="s0">if </span><span class="s1">t </span><span class="s2">&gt; </span><span class="s3">3600 </span><span class="s2">* </span><span class="s3">24 </span><span class="s2">* </span><span class="s1">days</span><span class="s2">:</span><span class="s1"> 
+                </span><span class="s0">break</span><span class="s1"> 
+    </span><span class="s0">return </span><span class="s1">u</span><span class="s2">, </span><span class="s1">u_</span><span class="s2">, </span><span class="s1">t_</span></pre>
+</body>
+</html>
