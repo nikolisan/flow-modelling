@@ -25,7 +25,7 @@ g = 9.807   # gravity acceleration
 
 # Incoming Wave properties
 T = 4000             # incoming tidal wave period -> 12h, 25h
-A = 10                # wave amplitude (m) -> 0.4m
+A = 0.4                # wave amplitude (m) -> 0.4m
 c = numpy.sqrt(g * H)   # wave celerity
 
 # Discretization variables
@@ -33,7 +33,7 @@ Nx = 50  # Number of cells in x direction
 Ny = 50  # Number of cells in y direction
 
 # Variables for run
-days = 0.5
+days = 0.1
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # #
